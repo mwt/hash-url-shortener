@@ -24,7 +24,6 @@ if (!empty($url_to_shorten) && preg_match('|^https://hash\.mwt\.me/|', $url_to_s
 		curl_setopt($ch,  CURLOPT_RETURNTRANSFER, TRUE);
 		$response = curl_exec($ch);
 		$response_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
 		if ($response_status == '404') {
 			die('Not a valid URL');
 		}
