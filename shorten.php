@@ -9,6 +9,9 @@ ini_set('display_errors', 0);
 
 require('config.php');
 
+// add access control header for ajax requests
+header('Access-Control-Allow-Origin: *');
+
 // if request type is post, take longurl from post, 
 // otherwise get from longurl query parameter
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['longurl'])) {
