@@ -9,7 +9,7 @@ ini_set('display_errors', 0);
 
 $url_to_shorten = get_magic_quotes_gpc() ? stripslashes(trim($_REQUEST['longurl'])) : trim($_REQUEST['longurl']);
 
-if (!empty($url_to_shorten) && preg_match('|^https?://|', $url_to_shorten)) {
+if (!empty($url_to_shorten) && preg_match('|^https://hash\.mwt\.me/|', $url_to_shorten)) {
 	require('config.php');
 
 	// check if the client IP is allowed to shorten
