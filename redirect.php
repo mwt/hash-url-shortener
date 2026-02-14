@@ -17,19 +17,34 @@ $shortened_id = getIDFromShortenedURL($_GET['url']);
 
 if (CACHE) {
 	$long_url = file_get_contents(CACHE_DIR . $shortened_id);
-	if (empty($long_url) || !preg_match('|^https://hash\.mwt\.me/|', $long_url)) {
-		$long_url = mysql_result(mysql_query('SELECT long_url FROM ' . DB_TABLE . ' WHERE id="' . mysql_real_escape_string($shortened_id) . '"'), 0, 0);
+	if (empty($long_url) || !str_starts_with($long_url, LONGURL_PREFIX)) {
+		$stmt = $DB->prepare('SELECT long_url FROM ' . DB_TABLE . ' WHERE id = ?');
+		$stmt->bind_param('i', $shortened_id);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$row = $result->fetch_row();
+		$long_url = $row[0] ?? '';
+		$stmt->close();
 		@mkdir(CACHE_DIR, 0777);
 		$handle = fopen(CACHE_DIR . $shortened_id, 'w+');
 		fwrite($handle, $long_url);
 		fclose($handle);
 	}
 } else {
-	$long_url = mysql_result(mysql_query('SELECT long_url FROM ' . DB_TABLE . ' WHERE id="' . mysql_real_escape_string($shortened_id) . '"'), 0, 0);
+	$stmt = $DB->prepare('SELECT long_url FROM ' . DB_TABLE . ' WHERE id = ?');
+	$stmt->bind_param('i', $shortened_id);
+	$stmt->execute();
+	$result = $stmt->get_result();
+	$row = $result->fetch_row();
+	$long_url = $row[0] ?? '';
+	$stmt->close();
 }
 
 if (TRACK) {
-	mysql_query('UPDATE ' . DB_TABLE . ' SET referrals=referrals+1 WHERE id="' . mysql_real_escape_string($shortened_id) . '"');
+	$stmt = $DB->prepare('UPDATE ' . DB_TABLE . ' SET referrals=referrals+1 WHERE id = ?');
+	$stmt->bind_param('i', $shortened_id);
+	$stmt->execute();
+	$stmt->close();
 }
 
 header('HTTP/1.1 301 Moved Permanently');
