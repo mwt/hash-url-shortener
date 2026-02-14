@@ -70,6 +70,7 @@ echo BASE_HREF . $shortened_url;
 function getShortenedURLFromID($integer, $base = ALLOWED_CHARS)
 {
 	$length = strlen($base);
+	$out = '';
 	while ($integer > $length - 1) {
 		$out = $base[fmod($integer, $length)] . $out;
 		$integer = floor($integer / $length);
