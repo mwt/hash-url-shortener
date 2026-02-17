@@ -37,4 +37,4 @@ define('CACHE', TRUE);
 define('CACHE_DIR', dirname(__FILE__) . '/cache/');
 
 // prefix for shortened URLs (include trailing slash)
-define('LONGURL_PREFIX', 'https://hash.mwt.me/');
+define('LONGURL_PREFIX', 'https://hash.mwt.me/#');
